@@ -25,10 +25,10 @@ mainLoop floor room = do
 
     command <- getChar
 
-    if (command `elem` movementEntries) then do
+    if command `elem` movementEntries then do
         let movedTo = tryMove floor room (fromChar command)
         mainLoop floor movedTo
-    else if (command `elem` editDescriptionEntries) then do
+    else if command `elem` editDescriptionEntries then do
         putStrLn ""
         newDesc <- getLine
         let updatedRoom = changeDescription room newDesc

@@ -14,7 +14,7 @@ Empty room
 1
 (0,0)
 --BEGIN--
-Test
+Empty room
 --END--
 
 3

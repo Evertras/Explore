@@ -33,10 +33,10 @@ data Room = Room
             } deriving (Show)
 
 instance Eq Room where
-    r1 == r2 = (roomId r1) == (roomId r2)
+    r1 == r2 = roomId r1 == roomId r2
 
 instance Ord Room where
-    r1 `compare` r2 = (roomId r1) `compare` (roomId r2)
+    r1 `compare` r2 = roomId r1 `compare` roomId r2
 
 type Connection = (Int, Int)
 
@@ -67,7 +67,7 @@ coordDirections (x1, y1) (x2, y2)
 
 connectionDirection :: Floor -> Room -> Connection -> Direction
 connectionDirection floor room (id1, id2)
-                    | (roomId room) == id1 = coordDirections (position a) (position b)
+                    | roomId room == id1 = coordDirections (position a) (position b)
                     | otherwise = coordDirections (position b) (position a)
                     where a = fromJust $ findRoomById floor id1
                           b = fromJust $ findRoomById floor id2
@@ -103,7 +103,7 @@ dig sourceRoom dir oldFloor@(Floor rooms connections)
                                          if alreadyExists then oldFloor
                                             else Floor rooms (newConnection : connections)
     where targetCoords = moveCoords (position sourceRoom) dir
-          existingTarget = find (\room -> (position room) == targetCoords) (traverse rooms)
+          existingTarget = find (\room -> position room == targetCoords) (traverse rooms)
 
 updateRoom :: Floor -> Room -> Floor
 updateRoom (Floor roomTree connections) newRoom = Floor (AVLTree.insert roomTree newRoom) connections
