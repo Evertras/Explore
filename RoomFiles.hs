@@ -2,6 +2,7 @@ module RoomFiles (
     saveFloor
 ) where
 
+import AVLTree
 import Rooms
 import System.IO
 import Data.Char
@@ -25,11 +26,12 @@ serializeRoom (Room roomId description position) =
         ]
 
 serializeConnection :: Connection -> String
-serializeConnection (a, b) = (show $ roomId a) ++ "," ++ (show $ roomId b)
+serializeConnection (a, b) = (show a) ++ "," ++ (show b)
 
 saveFloor :: Floor -> FilePath -> IO ()
-saveFloor (Floor rooms connections) filePath = do 
+saveFloor (Floor roomTree connections) filePath = do 
     writeFile filePath "1\n"
+    let rooms = traverse roomTree
     let roomData = map unlines (map serializeRoom rooms)
     let connectionData = map serializeConnection connections
     appendFile filePath (unlines roomData)
@@ -47,4 +49,4 @@ loadFloor :: FilePath -> IO Floor
 loadFloor filePath = do
     fileContents <- readFile filePath
     let linedContents = lines fileContents
-    return $ Floor [] []
+    return $ Floor Empty []

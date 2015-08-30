@@ -3,7 +3,9 @@ import Rooms
 import RoomFiles
 import Navigate
 
-validEntries = ['N', 'n', 'E', 'e', 'S', 's', 'W', 'w']
+movementEntries = ['N', 'n', 'E', 'e', 'S', 's', 'W', 'w']
+
+editDescriptionEntries = ['D', 'd']
 
 displayRoomText :: Floor -> Room -> IO ()
 displayRoomText floor room = do
@@ -18,10 +20,21 @@ main = do
 
 mainLoop :: Floor -> Room -> IO ()
 mainLoop floor room = do
+    putStrLn " "
     displayRoomText floor room
 
-    forever $ do
-        dir <- getChar
-        when (dir `elem` validEntries) $ do
-            let movedTo = tryMove floor room (fromChar dir)
-            mainLoop floor movedTo
+    command <- getChar
+
+    if (command `elem` movementEntries) then do
+        let movedTo = tryMove floor room (fromChar command)
+        mainLoop floor movedTo
+    else if (command `elem` editDescriptionEntries) then do
+        putStrLn ""
+        newDesc <- getLine
+        let updatedRoom = changeDescription room newDesc
+        let updatedFloor = updateRoom floor updatedRoom
+        saveFloor updatedFloor "floor.txt"
+        mainLoop updatedFloor updatedRoom
+    else do
+        putStrLn "Unknown command"
+        mainLoop floor room
