@@ -34,10 +34,10 @@ displayExits floor room = let roomExits = getDirectionsFromRoom floor room
 
 displayRoom :: Floor -> Room -> [String]
 displayRoom floor room = [
-                            "ID: " ++ (show $ roomId room),
-                            "Pos: " ++ (show $ position room),
-                            "Description: " ++ (description room),
-                            "Exits: " ++ (displayExits floor room)
+                            "ID: " ++ (show . roomId $ room),
+                            "Pos: " ++ (show . position $ room),
+                            "Description: " ++ description room,
+                            "Exits: " ++ displayExits floor room
                          ]
 
 genTestFloor :: (Room, Floor)
@@ -68,7 +68,7 @@ tryMove floor sourceRoom dir
     | exitsToDirection == [] = sourceRoom
     | otherwise = moveThrough floor sourceRoom (head exitsToDirection)
     where exits = map (asBase sourceRoom) (getExitsForRoom floor sourceRoom)
-          exitsToDirection = [(a, b) | (a, b) <- exits, (coordDirections (posFromId a) (posFromId b)) == dir]
+          exitsToDirection = [(a, b) | (a, b) <- exits, coordDirections (posFromId a) (posFromId b) == dir]
           posFromId = position . fromJust . findRoomById floor
 
 digAndMove :: (Floor, Room) -> Direction -> (Floor, Room)

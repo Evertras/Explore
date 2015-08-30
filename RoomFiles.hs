@@ -26,7 +26,7 @@ serializeRoom (Room roomId description position) =
         ]
 
 serializeConnection :: Connection -> String
-serializeConnection (a, b) = (show a) ++ "," ++ (show b)
+serializeConnection (a, b) = show a ++ "," ++ show b
 
 saveFloor :: Floor -> FilePath -> IO ()
 saveFloor (Floor roomTree connections) filePath = do 
